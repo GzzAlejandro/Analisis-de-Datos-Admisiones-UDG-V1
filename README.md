@@ -35,15 +35,20 @@ Análisis de **891,574 aspirantes y 356,073 admitidos** en 19 centros universita
 
 Salud se consolida como el área con más aspirantes y Económico-Administrativas/Sociales cae de forma sostenida desde 2020. Esta figura proviene del reporte en PDF: la clasificación de carreras por área no está versionada en este repositorio (ver [limitaciones](#limitaciones)).
 
-## Cómo está construido
+## Stack Tecnológico y Metodología Asistida por IA
 
-| Capa | Herramientas |
+Para este proyecto, adopté un flujo de trabajo moderno, integrando herramientas tradicionales de Data Science con asistentes de Inteligencia Artificial para acelerar el procesamiento de datos crudos (ETL) y concentrar mi esfuerzo humano en el diseño de la arquitectura, el modelado relacional y la interpretación estratégica.
+
+| Categoría | Herramientas Utilizadas |
 |---|---|
-| Base de datos | MySQL: modelo relacional con catálogos (`centro_universitario`, `ciclo_escolar`, `carrera`) y tabla de hechos (`admision`) |
-| Limpieza y carga | Normalización de nombres de carreras y centros, 5 formatos de archivo distintos |
-| Análisis | Python: pandas, SQLAlchemy |
-| Visualización | Matplotlib con paleta institucional |
-| Entrega | Notebooks de Jupyter, reporte en PDF |
+| **Base de Datos** | MySQL (Esquema relacional: `centro_universitario`, `ciclo_escolar`, `carrera`, `admision`) |
+| **Lenguajes** | Python 3.10, SQL |
+| **Librerías (Python)** | `pandas` (Manipulación), `SQLAlchemy` (Conexión a BD), `matplotlib`, `seaborn` (Visualización) |
+| **Flujo Asistido por IA** | Claude 3.5 Sonnet |
+| **Rol de la IA (Copilot)** | Generación de scripts de limpieza (`Regex`) para normalizar 5 formatos distintos de CSVs, parseo de caracteres corruptos y asistencia en la escritura de consultas SQL complejas. |
+| **Entregables** | Jupyter Notebooks (`.ipynb`), Reporte analítico en PDF. |
+
+*Detalle de los problemas de calidad de datos resueltos durante el proceso de ETL en las fuentes oficiales:* [`docs/calidad_de_datos.md`](docs/calidad_de_datos.md).
 
 Detalle de los problemas de datos encontrados en las fuentes oficiales: [`docs/calidad_de_datos.md`](docs/calidad_de_datos.md).
 
@@ -79,13 +84,24 @@ Detalle de los problemas de datos encontrados en las fuentes oficiales: [`docs/c
 
 El notebook `02_cugdl_admisiones.ipynb` analiza los 5 programas presenciales del Centro Universitario de Guadalajara (Ciberseguridad, Creatividad Digital, Inteligencia Artificial y Ciencia de los Datos, Inteligencia Financiera y de Negocios, Tecnologías Biomédicas). En el ciclo 2025B tuvieron 1,067 aspirantes, 600 admitidos y una tasa de admisión de 56.2%. Son programas nuevos con solo 3 ciclos de datos (2024B, 2025A y 2025B), así que el análisis es exploratorio.
 
+
+
 ## Limitaciones
 
 - **Análisis descriptivo:** muestra cambios y asociaciones, no demuestra que la pandemia los haya causado.
 - **Deserción y egreso no incluidos:** no existen datos estandarizados y continuos en los informes de rectoría.
-- **Admisión cubre 2015-2025:** los ciclos 2005-2014 no se cargaron.
+- **Admisión cubre 2015-2025:** los ciclos 2005-2014 no se encuentran disponibles en la pagina.
 - **Clasificación por áreas de conocimiento:** aparece en el reporte pero su código no está en este repositorio.
 - **Fuentes oficiales con errores y formatos cambiantes** (ver `docs/calidad_de_datos.md`).
+
+## Lecciones Aprendidas y Reflexion
+
+La transición de archivos planos (`.csv`/`.xlsx`) a un motor de base de datos relacional (MySQL) representó un salto cualitativo en mis habilidades de ingeniería de datos. Los aprendizajes más significativos de la V1 fueron:
+
+1. **La Realidad de los Datos Públicos (Data Cleaning):** Aprender que el 80% del tiempo de un analista se va en limpiar datos. Enfrenté formatos inconsistentes, filas de totales incrustadas y errores tipográficos (ej. `ALTOS` vs `CUALTOS`) que rompían los scripts de automatización.
+2. **Modelado Relacional:** Romper una tabla plana gigante en catálogos de dimensiones (`centro`, `carrera`) y una tabla de hechos (`admisiones`) redujo la redundancia y optimizó las consultas analíticas en SQL.
+3. **Aprendizaje Tecnico y de Optimizacion:** El extravío temporal del código de clasificación por "Áreas de Conocimiento" (mostrado en el reporte PDF) me enseñó la importancia crítica de utilizar repositorios de Git y documentar cada script en el momento preciso. Esta lección estructuró la metodología de control de versiones para la futura V2.
+4. **Productividad con IA:** Validé que el uso de LLMs (Claude Sonnet) como asistentes de código es invaluable para el preprocesamiento repetitivo, permitiéndome enfocarme en el análisis de negocio (Business Intelligence) y la estadística.
 
 ## Próximos pasos (V2)
 
